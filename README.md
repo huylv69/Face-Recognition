@@ -1,3 +1,3 @@
-# Face-Detection
+# Face Detection & Recognition 
 
  Face Detection Project for Multimedia Database.

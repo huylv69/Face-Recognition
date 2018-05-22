@@ -15,7 +15,7 @@ import pickle
 # subjects = []
 with open("trained_model/subject.pkl", 'rb') as f:
     subjects = pickle.load(f)
-print subjects
+
 # Load face recognizer
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 face_recognizer.read("trained_model/trained_model.xml")
@@ -26,7 +26,7 @@ def detect_face(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
     #load OpenCV face detector use LBP  more accurate but slow Haar classifier
-    face_cascade = cv2.CascadeClassifier('opencv-files/lbpcascade_frontalface.xml')
+    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_default.xml')
 
     # detect multiscale images
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5) #result is a list of faces
@@ -88,11 +88,29 @@ if __name__ == '__main__':
         predicted_img = predict(test_img)
         print("Prediction complete")
         #display images
-        cv2.imshow("Result", cv2.resize(predicted_img, (400, 500)))
+        cv2.imshow("Result", predicted_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-
-
-
-
-
+    elif mode == 2 : 
+        cap = cv2.VideoCapture(0)
+        face_cascade = cv2.CascadeClassifier('opencv-files/lbpcascade_frontalface.xml')
+        while 1:
+            ret, img = cap.read()
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray, 1.5, 5)
+            for (x,y,w,h) in faces:
+                cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+                label,conf=face_recognizer.predict(gray[y:y+h,x:x+w])
+                print label  ,conf
+                # if label < len(subjects):
+                    # draw_text(img, subjects[label], rect[0], rect[1]-5)
+                if conf <100:
+                    cv2.putText(img, subjects[label], (x, y+h), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+                else :
+                    cv2.putText(img, subjects[0], (x, y+h), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+                    # cv2.PutText(img,subjects[label],(x,y+h),font,255)
+            cv2.imshow('img',img)
+            if cv2.waitKey(1) == ord('q'):
+                break
+        cap.release()
+        cv2.destroyAllWindows()
