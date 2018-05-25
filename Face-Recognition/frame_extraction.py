@@ -8,10 +8,10 @@ def detect_face(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
     #load OpenCV face detector use LBP  more accurate but slow Haar classifier
-    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_alt.xml')
 
     # detect multiscale images
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5) #result is a list of faces
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=1,minSize=(20,20)) #result is a list of faces
     
     #if no faces are detected then return original img
     if (len(faces) == 0):

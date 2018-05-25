@@ -1,7 +1,7 @@
 import cv2
 import sys
 
-cascPath = "data\haarcascade_frontalface_alt.xml"
+cascPath = "data/haarcascade_frontalface_alt.xml"
 details = False
 if len(sys.argv) >= 2:
     details = sys.argv[1]

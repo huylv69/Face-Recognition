@@ -33,7 +33,7 @@ def detect_face(img):
 
     # detect multiscale images
     faces = face_cascade.detectMultiScale(
-        gray, scaleFactor=1.2, minNeighbors=5)  # result is a list of faces
+        gray, scaleFactor=1.1, minNeighbors=1,minSize=(20,20))  # result is a list of faces
 
     # if no faces are detected then return original img
     if (len(faces) == 0):
