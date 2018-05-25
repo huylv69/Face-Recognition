@@ -26,7 +26,7 @@ def detect_face(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
     #load OpenCV face detector use LBP  more accurate but slow Haar classifier
-    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_alt.xml')
 
     # detect multiscale images
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5) #result is a list of faces
@@ -57,7 +57,9 @@ def predict(test_img):
     img = test_img.copy()
     #detect face from the image
     face, rect = detect_face(img)
-
+    if face is None:
+        print " Can not detect face from file!"
+        return None
     #predict the image using face recognizer 
     label, confidence = face_recognizer.predict(face)
     print label, confidence
@@ -86,18 +88,21 @@ if __name__ == '__main__':
         test_img = cv2.imread(path)
         #perform a prediction
         predicted_img = predict(test_img)
-        print("Prediction complete")
-        #display images
-        cv2.imshow("Result", predicted_img)
-        cv2.waitKey(0)
+        if(predicted_img is None):
+            pass
+        else:
+            print("Prediction complete")
+            #display images
+            cv2.imshow("Result", predicted_img)
+            cv2.waitKey(0)
         cv2.destroyAllWindows()
     elif mode == 2 : 
         cap = cv2.VideoCapture(0)
-        face_cascade = cv2.CascadeClassifier('opencv-files/lbpcascade_frontalface.xml')
+        face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_alt.xml')
         while 1:
             ret, img = cap.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(gray, 1.5, 5)
+            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5)
             for (x,y,w,h) in faces:
                 cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
                 label,conf=face_recognizer.predict(gray[y:y+h,x:x+w])
