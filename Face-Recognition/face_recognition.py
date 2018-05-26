@@ -39,10 +39,18 @@ def detect_face(img):
     if (len(faces) == 0):
         return None, None
 
-    (x, y, w, h) = faces[0]  # assumption that there will be only one face,
+    best_face = None
+    biggest_face = 0
+    for face in faces:
+        (x,y,w,h) = face
+        if(w*h > biggest_face):
+            best_face = face
+            biggest_face = w*h
+
+    (x, y, w, h) = best_face  # assumption that there will be only one face,
 
     # return only the face part of the image
-    return gray[y:y+w, x:x+h], faces[0]
+    return gray[y:y+w, x:x+h], best_face
 
 # ### Prediction
 # function to draw rectangle on image according to given (x, y) coordinates and given width and heigh
